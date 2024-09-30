@@ -9,8 +9,8 @@ function Player() {
     const [idleTextures, setIdleTextures] = useState<Texture[]>([]);
     const [runTextures, setRunTextures] = useState<Texture[]>([]);
 
-    const [playerX, setPlayerX] = useState<number>(100);
-    const [playerY, setPlayerY] = useState<number>(100);
+    const [playerX, setPlayerX] = useState<number>(10);
+    const [playerY, setPlayerY] = useState<number>(170);
     const [isRunning, setIsRunning] = useState<boolean>(false);
 
     const documentRef = useRef(document);
@@ -54,7 +54,7 @@ function Player() {
     }, []);
 
     useEffect(() => {
-        if (playerX !== 100) {
+        if (playerX !== 10) {
             setIsRunning(true);
         }
     }, [playerX, playerY]);

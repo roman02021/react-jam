@@ -8,6 +8,9 @@ dependencies:
   '@pixi/react':
     specifier: '7'
     version: 7.1.2(@babel/runtime@7.25.6)(@pixi/app@7.4.2)(@pixi/constants@7.4.2)(@pixi/core@7.4.2)(@pixi/display@7.4.2)(@pixi/extensions@7.4.2)(@pixi/graphics@7.4.2)(@pixi/math@7.4.2)(@pixi/mesh-extras@7.4.2)(@pixi/mesh@7.4.2)(@pixi/particle-container@7.4.2)(@pixi/sprite-animated@7.4.2)(@pixi/sprite-tiling@7.4.2)(@pixi/sprite@7.4.2)(@pixi/text-bitmap@7.4.2)(@pixi/text@7.4.2)(@pixi/ticker@7.4.2)(prop-types@15.8.1)(react-dom@18.3.1)(react@18.3.1)
+  '@types/matter-js':
+    specifier: ^0.19.7
+    version: 0.19.7
   matter-js:
     specifier: ^0.20.0
     version: 0.20.0
@@ -1151,6 +1154,10 @@ packages:
   /@types/estree@1.0.6:
     resolution: {integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==}
     dev: true
+
+  /@types/matter-js@0.19.7:
+    resolution: {integrity: sha512-dlh50YEh1lQS4fiCDGBnK75ocHQIq/1E371Qk6hASJImICIivdZQC2GkOqnfBm0Hac2xLk5+yrqRFDAEfj/yLA==}
+    dev: false
 
   /@types/prop-types@15.7.13:
     resolution: {integrity: sha512-hCZTSvwbzWGvhqxp/RqVqwU999pBf2vp7hzIjiYOsl8wqOmUxkQ6ddw1cV3l8811+kdUFus/q4d1Y3E3SyEifA==}
