@@ -1,0 +1,89 @@
+{
+    "frames": {
+        "Run-Sheet-0.png": {
+            "frame": { "x": 0, "y": 0, "w": 32, "h": 49 },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 49 },
+            "sourceSize": { "w": 32, "h": 49 },
+            "anchor": { "x": 0.00390625, "y": -0.0375 }
+        },
+        "Run-Sheet-1.png": {
+            "frame": { "x": 32, "y": 0, "w": 34, "h": 49 },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": { "x": 0, "y": 0, "w": 34, "h": 49 },
+            "sourceSize": { "w": 34, "h": 49 },
+            "anchor": { "x": 0.00390625, "y": -0.0375 }
+        },
+        "Run-Sheet-2.png": {
+            "frame": { "x": 66, "y": 0, "w": 30, "h": 49 },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": { "x": 0, "y": 0, "w": 30, "h": 49 },
+            "sourceSize": { "w": 30, "h": 49 },
+            "anchor": { "x": 0.00390625, "y": -0.0375 }
+        },
+        "Run-Sheet-3.png": {
+            "frame": { "x": 96, "y": 0, "w": 28, "h": 49 },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": { "x": 0, "y": 0, "w": 28, "h": 49 },
+            "sourceSize": { "w": 28, "h": 49 },
+            "anchor": { "x": 0.00390625, "y": -0.0375 }
+        },
+        "Run-Sheet-4.png": {
+            "frame": { "x": 124, "y": 0, "w": 32, "h": 49 },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 49 },
+            "sourceSize": { "w": 32, "h": 49 },
+            "anchor": { "x": 0.00390625, "y": -0.0375 }
+        },
+        "Run-Sheet-5.png": {
+            "frame": { "x": 156, "y": 0, "w": 32, "h": 49 },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 49 },
+            "sourceSize": { "w": 32, "h": 49 },
+            "anchor": { "x": 0.00390625, "y": -0.0375 }
+        },
+        "Run-Sheet-6.png": {
+            "frame": { "x": 188, "y": 0, "w": 29, "h": 49 },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": { "x": 0, "y": 0, "w": 29, "h": 49 },
+            "sourceSize": { "w": 29, "h": 49 },
+            "anchor": { "x": 0.00390625, "y": -0.0375 }
+        },
+        "Run-Sheet-7.png": {
+            "frame": { "x": 217, "y": 0, "w": 29, "h": 49 },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": { "x": 0, "y": 0, "w": 29, "h": 49 },
+            "sourceSize": { "w": 29, "h": 49 },
+            "anchor": { "x": 0.00390625, "y": -0.0375 }
+        }
+    },
+    "animations": {
+        "Run-Sheet": [
+            "Run-Sheet-0.png",
+            "Run-Sheet-1.png",
+            "Run-Sheet-2.png",
+            "Run-Sheet-3.png",
+            "Run-Sheet-4.png",
+            "Run-Sheet-5.png",
+            "Run-Sheet-6.png",
+            "Run-Sheet-7.png"
+        ]
+    },
+    "meta": {
+        "app": "https://www.codeandweb.com/texturepacker",
+        "version": "1.1",
+        "image": "run/spirtesheet.png",
+        "format": "RGBA8888",
+        "size": { "w": 246, "h": 49 },
+        "scale": "1",
+        "smartupdate": "$TexturePacker:SmartUpdate:0afa85fb3f58c65039729327f5f084ce:d34e82614f8cddfa8d8adff03483e7e2:6a9ded68edae838b94218a4f9bf21728$"
+    }
+}
