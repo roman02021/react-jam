@@ -5,7 +5,15 @@ import Map from "./components/Map";
 import * as Matter from "matter-js";
 
 import { BlurFilter, TextStyle } from "pixi.js";
-import { Stage, Container, Sprite, Text, useApp, useTick } from "@pixi/react";
+import {
+    Stage,
+    Container,
+    Sprite,
+    Text,
+    useApp,
+    useTick,
+    _ReactPixi,
+} from "@pixi/react";
 
 const App = () => {
     const blurFilter = useMemo(() => new BlurFilter(2), []);
@@ -21,13 +29,22 @@ const App = () => {
         Matter.Runner.run(runner, physic);
 
         const body = Matter.Bodies.rectangle(
-            containerRef?.current.width / 2,
-            containerRef?.current.height / 2,
-            100,
-            100,
-            { friction: 0.01 }
+            -10,
+            200,
+            containerRef.current?.width / 2,
+            containerRef.current?.height / 2,
+            { friction: 0.01, isStatic: true }
         );
+        const body2 = Matter.Bodies.rectangle(10, 100, 64, 80, {
+            friction: 0.01,
+            isStatic: true,
+        });
+        Matter.World.add(physic.world, body);
+        Matter.World.add(physic.world, body2);
+        console.log(body, "ayo");
     }, []);
+
+    console.log(containerRef, containerRef.current?.width);
 
     return (
         <Stage width={500} height={300} options={{ background: 0x1099bb }}>

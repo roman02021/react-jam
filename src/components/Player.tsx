@@ -10,7 +10,7 @@ function Player() {
     const [runTextures, setRunTextures] = useState<Texture[]>([]);
 
     const [playerX, setPlayerX] = useState<number>(10);
-    const [playerY, setPlayerY] = useState<number>(170);
+    const [playerY, setPlayerY] = useState<number>(100);
     const [isRunning, setIsRunning] = useState<boolean>(false);
 
     const documentRef = useRef(document);
