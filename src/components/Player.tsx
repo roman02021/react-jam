@@ -21,7 +21,7 @@ function Player({ engine }: Props) {
     const [runTextures, setRunTextures] = useState<Texture[]>([]);
 
     const [playerX, setPlayerX] = useState<number>(10);
-    const [playerY, setPlayerY] = useState<number>(-10);
+    const [playerY, setPlayerY] = useState<number>(100);
     const [isRunning, setIsRunning] = useState<boolean>(false);
     const containerRef = useRef<_ReactPixi.IContainer | null>();
     const [heroBody, setHeroBody] = useState<Matter.Body>();
@@ -30,7 +30,10 @@ function Player({ engine }: Props) {
 
     function moveRight() {
         console.log("moveRight", playerX);
-        setPlayerX((playerX) => playerX + 10);
+        // setPlayerX((playerX) => playerX + 10);
+        if (heroBody) {
+            Matter.Body.setVelocity(heroBody, { x: 100, y: 2 });
+        }
     }
 
     function moveLeft(moveBy: number) {
@@ -88,8 +91,7 @@ function Player({ engine }: Props) {
             Matter.Composite.add(engine.world, body);
 
             function handleCollision(e) {
-                console.log("!!! COLIDING", e);
-
+                // console.log("!!! COLIDING", e);
                 // setHeroBody({ ...testBody, velocity: { x: 0, y: 0 } });
                 // containerRef.current.y = 100;
                 // containerRef.current.x = 100;
@@ -155,7 +157,7 @@ function Player({ engine }: Props) {
         // console.log(heroBody?.position);
         // this.sprite.x = this.body.position.x - this.sprite.width / 2;
         // this.sprite.y = this.body.position.y - this.sprite.height / 2;
-        console.log(heroBody?.position);
+        // console.log(heroBody?.position);
         if (testBody) {
             console.log(heroBody?.position.y, testBody.position.y, "yoo");
         }

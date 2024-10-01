@@ -97,7 +97,7 @@ function Map({ engine }: Props) {
             setMapTextures(tempMapTextures);
 
             function handleCollision(e) {
-                console.log("COLIDING !!!!!!!!!", e);
+                // console.log("COLIDING !!!!!!!!!", e);
             }
 
             console.log(Matter, "yoooo", engine);
