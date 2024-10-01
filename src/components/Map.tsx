@@ -43,7 +43,7 @@ function Map({ engine }: Props) {
             isStatic: true,
         });
 
-        console.log(body.position, "TILE POS");
+        console.log(body.position, "TILE POS", x, y);
         if (engine) {
             // console.log(body);
             Matter.Composite.add(engine.world, body);
@@ -90,7 +90,7 @@ function Map({ engine }: Props) {
                             ss.tileSize
                         )
                     );
-                    addPhysicsToTile(xTile * 16, yTile * 16);
+                    addPhysicsToTile(tile.x * 16, tile.y * 16);
                     tempMapTextures.push([tex, tile.x, tile.y]);
                 });
             });

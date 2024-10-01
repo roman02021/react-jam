@@ -29,10 +29,11 @@ function Player({ engine }: Props) {
     const documentRef = useRef(document);
 
     function moveRight() {
-        console.log("moveRight", playerX);
         // setPlayerX((playerX) => playerX + 10);
+        console.log(heroBody);
         if (heroBody) {
-            Matter.Body.setVelocity(heroBody, { x: 100, y: 2 });
+            console.log("moveRight", playerX, heroBody.position);
+            Matter.Body.setVelocity(heroBody, { x: 1, y: -10 });
         }
     }
 
@@ -81,11 +82,11 @@ function Player({ engine }: Props) {
     useEffect(() => {
         const body = Matter.Bodies.rectangle(playerX, playerY, 64, 80, {
             friction: 0.01,
-            mass: 0.0000001,
+            mass: 1,
             label: "HERO",
         });
         setHeroBody(body);
-        console.log(body, "yoo", engine);
+        console.log(body, "yoo", engine, "HERO BODY:", heroBody);
         if (engine) {
             console.log(engine, "ADED HERO");
             Matter.Composite.add(engine.world, body);
@@ -131,7 +132,7 @@ function Player({ engine }: Props) {
         return () => {
             documentRef.current.removeEventListener("keydown", handleKeyDown);
         };
-    }, []);
+    }, [heroBody]);
 
     useTick((delta) => {
         if (heroBody && containerRef.current !== undefined) {
