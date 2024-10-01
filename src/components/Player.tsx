@@ -1,17 +1,30 @@
 import React, { useRef, useState } from "react";
-import { Stage, Container, useTick, AnimatedSprite } from "@pixi/react";
+import {
+    Stage,
+    Container,
+    useTick,
+    AnimatedSprite,
+    _ReactPixi,
+} from "@pixi/react";
 import { Texture, Spritesheet, Assets } from "pixi.js";
 import { useEffect } from "react";
 import CharSpriteSheet from "../assets/char/spirtesheet.json";
 import CharRunSpriteSheet from "../assets/run/spirtesheet.json";
+import Matter, { Body } from "matter-js";
 
-function Player() {
+interface Props {
+    engine: Matter.Engine;
+}
+
+function Player({ engine }: Props) {
     const [idleTextures, setIdleTextures] = useState<Texture[]>([]);
     const [runTextures, setRunTextures] = useState<Texture[]>([]);
 
     const [playerX, setPlayerX] = useState<number>(10);
-    const [playerY, setPlayerY] = useState<number>(100);
+    const [playerY, setPlayerY] = useState<number>(-10);
     const [isRunning, setIsRunning] = useState<boolean>(false);
+    const containerRef = useRef<_ReactPixi.IContainer | null>();
+    const [heroBody, setHeroBody] = useState<Matter.Body>();
 
     const documentRef = useRef(document);
 
@@ -26,7 +39,6 @@ function Player() {
     }
 
     async function loadIdleTextures() {
-        console.log(CharSpriteSheet);
         const ss = new Spritesheet(
             Texture.from(CharSpriteSheet.meta.image),
             CharSpriteSheet
@@ -44,13 +56,57 @@ function Player() {
         );
 
         await ss.parse();
-        console.log(ss.animations["Run-Sheet"]);
         setRunTextures(ss.animations["Run-Sheet"]);
     }
+
+    function addPhysicsToHero() {
+        const body = Matter.Bodies.rectangle(playerX, playerY, 64, 80, {
+            friction: 0.01,
+            mass: 100,
+            label: "HERO",
+        });
+        setHeroBody(body);
+        console.log(body, "yoo", engine);
+        if (engine) {
+            console.log(engine, "ADED HERO");
+            Matter.Composite.add(engine.world, body);
+        }
+    }
+
+    let testBody: Matter.Body;
+
+    useEffect(() => {
+        const body = Matter.Bodies.rectangle(playerX, playerY, 64, 80, {
+            friction: 0.01,
+            mass: 0.0000001,
+            label: "HERO",
+        });
+        setHeroBody(body);
+        console.log(body, "yoo", engine);
+        if (engine) {
+            console.log(engine, "ADED HERO");
+            Matter.Composite.add(engine.world, body);
+
+            function handleCollision(e) {
+                console.log("!!! COLIDING", e);
+
+                // setHeroBody({ ...testBody, velocity: { x: 0, y: 0 } });
+                // containerRef.current.y = 100;
+                // containerRef.current.x = 100;
+            }
+
+            console.log(Matter, "yoooo", engine);
+            if (engine) {
+                Matter.Events.on(engine, "collisionActive", handleCollision);
+                console.log("ADDED LISTENER");
+            }
+        }
+    }, [engine]);
 
     useEffect(() => {
         loadIdleTextures();
         loadRunningTextures();
+        // addPhysicsToHero();
     }, []);
 
     useEffect(() => {
@@ -74,8 +130,39 @@ function Player() {
             documentRef.current.removeEventListener("keydown", handleKeyDown);
         };
     }, []);
+
+    useTick((delta) => {
+        if (heroBody && containerRef.current !== undefined) {
+            containerRef.current.x = heroBody.position.x;
+            containerRef.current.y = heroBody.position.y;
+            // setHeroBody({
+            //     ...heroBody,
+            //     position: {
+            //         x: containerRef.current.x,
+            //         y: containerRef.current.y,
+            //     },
+            // });
+            // heroBody.position.x = containerRef.current.x;
+            // heroBody.position.y = containerRef.current.y;
+            // setHeroBody({
+            //     ...heroBody,
+            //     position: {
+            //         x: containerRef.current.x + 0.01,
+            //         y: containerRef.current.y + 0.1,
+            //     },
+            // });
+        }
+        // console.log(heroBody?.position);
+        // this.sprite.x = this.body.position.x - this.sprite.width / 2;
+        // this.sprite.y = this.body.position.y - this.sprite.height / 2;
+        console.log(heroBody?.position);
+        if (testBody) {
+            console.log(heroBody?.position.y, testBody.position.y, "yoo");
+        }
+    });
+
     return (
-        <Container x={playerX} y={playerY}>
+        <Container x={playerX} y={playerY} ref={containerRef}>
             {idleTextures.length > 0 && !isRunning && (
                 <AnimatedSprite
                     textures={idleTextures}
