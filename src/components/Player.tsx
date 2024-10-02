@@ -14,32 +14,39 @@ import Matter, { Body } from "matter-js";
 
 interface Props {
     engine: Matter.Engine;
+    stage: Stage;
 }
 
-function Player({ engine }: Props) {
+function Player({ engine, stage }: Props) {
     const [idleTextures, setIdleTextures] = useState<Texture[]>([]);
     const [runTextures, setRunTextures] = useState<Texture[]>([]);
 
     const [playerX, setPlayerX] = useState<number>(10);
-    const [playerY, setPlayerY] = useState<number>(100);
+    const [playerY, setPlayerY] = useState<number>(-100);
     const [isRunning, setIsRunning] = useState<boolean>(false);
     const containerRef = useRef<_ReactPixi.IContainer | null>();
     const [heroBody, setHeroBody] = useState<Matter.Body>();
+
+    const [isColliding, setIsColliding] = useState(false);
 
     const documentRef = useRef(document);
 
     function moveRight() {
         // setPlayerX((playerX) => playerX + 10);
-        console.log(heroBody);
-        if (heroBody) {
+        if (heroBody && stage) {
             console.log("moveRight", playerX, heroBody.position);
-            Matter.Body.setVelocity(heroBody, { x: 1, y: -10 });
+            heroBody.position.x += 0.5;
+            // Matter.Body.applyForce(heroBody, heroBody.position, {
+            //     x: 0.01,
+            //     y: 0,
+            // });
         }
     }
 
     function moveLeft(moveBy: number) {
-        console.log("moveLeft", playerX);
-        setPlayerX((playerX) => playerX - moveBy);
+        if (heroBody) {
+            Matter.Body.setVelocity(heroBody, { x: -2, y: 0 });
+        }
     }
 
     async function loadIdleTextures() {
@@ -65,30 +72,32 @@ function Player({ engine }: Props) {
 
     function addPhysicsToHero() {
         const body = Matter.Bodies.rectangle(playerX, playerY, 64, 80, {
-            friction: 0.01,
-            mass: 100,
+            friction: 0.5,
+            mass: 100000,
+
             label: "HERO",
         });
         setHeroBody(body);
-        console.log(body, "yoo", engine);
+
         if (engine) {
-            console.log(engine, "ADED HERO");
             Matter.Composite.add(engine.world, body);
         }
     }
 
+    useTick((delta) => {
+        stage.current.app.stage.position.x = -heroBody.position.x;
+    });
+
     let testBody: Matter.Body;
 
     useEffect(() => {
-        const body = Matter.Bodies.rectangle(playerX, playerY, 64, 80, {
-            friction: 0.01,
-            mass: 1,
+        const body = Matter.Bodies.rectangle(playerX, playerY, 48, 35, {
+            friction: 0,
             label: "HERO",
         });
         setHeroBody(body);
-        console.log(body, "yoo", engine, "HERO BODY:", heroBody);
+
         if (engine) {
-            console.log(engine, "ADED HERO");
             Matter.Composite.add(engine.world, body);
 
             function handleCollision(e) {
@@ -96,12 +105,19 @@ function Player({ engine }: Props) {
                 // setHeroBody({ ...testBody, velocity: { x: 0, y: 0 } });
                 // containerRef.current.y = 100;
                 // containerRef.current.x = 100;
+                setIsColliding(true);
+                console.log(e, "EVA", e.pairs);
+                if (heroBody) {
+                    heroBody.isStatic = true;
+                    // heroBody.position.y = e.paris.where
+                    e.pairs.forEach((pair) => {
+                        console.log(pair);
+                    });
+                }
             }
 
-            console.log(Matter, "yoooo", engine);
             if (engine) {
                 Matter.Events.on(engine, "collisionActive", handleCollision);
-                console.log("ADDED LISTENER");
             }
         }
     }, [engine]);
@@ -135,9 +151,17 @@ function Player({ engine }: Props) {
     }, [heroBody]);
 
     useTick((delta) => {
-        if (heroBody && containerRef.current !== undefined) {
+        if (
+            heroBody &&
+            containerRef.current !== undefined &&
+            containerRef.current !== null
+        ) {
             containerRef.current.x = heroBody.position.x;
-            containerRef.current.y = heroBody.position.y;
+            if (!isColliding) {
+                engine.gravity.x = 0;
+                containerRef.current.y = heroBody.position.y;
+            }
+
             // setHeroBody({
             //     ...heroBody,
             //     position: {
@@ -160,7 +184,7 @@ function Player({ engine }: Props) {
         // this.sprite.y = this.body.position.y - this.sprite.height / 2;
         // console.log(heroBody?.position);
         if (testBody) {
-            console.log(heroBody?.position.y, testBody.position.y, "yoo");
+            // console.log(heroBody?.position.y, testBody.position.y, "yoo");
         }
     });
 

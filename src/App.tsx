@@ -21,15 +21,12 @@ const App = () => {
     const [physicsEngine, setPhysicsEngine] = useState<Matter.Engine>();
 
     const containerRef = useRef(null);
+    const stageRef = useRef(null);
 
     useEffect(() => {
         const engine = Matter.Engine.create();
 
-        const runner = Matter.Runner.create({
-            delta: 1000 / 60,
-            isFixed: false,
-            enabled: true,
-        });
+        const runner = Matter.Runner.create();
         Matter.Runner.run(runner, engine);
         setPhysicsEngine(engine);
 
@@ -49,12 +46,22 @@ const App = () => {
         // console.log(body, "ayo");
     }, []);
 
-    console.log(containerRef, containerRef.current?.width);
+    // console.log(containerRef, containerRef.current?.width);
+    // if (stageRef.current) {
+    //     console.log(stageRef.current);
+    // }
 
     return (
-        <Stage width={500} height={300} options={{ background: 0x1099bb }}>
-            <Player engine={physicsEngine}></Player>
-            <Map engine={physicsEngine} />
+        <Stage
+            ref={stageRef}
+            width={500}
+            height={500}
+            options={{ background: 0x1099bb }}
+        >
+            <Container y={250}>
+                <Player engine={physicsEngine} stage={stageRef}></Player>
+                <Map engine={physicsEngine} />
+            </Container>
         </Stage>
     );
 };
