@@ -6,48 +6,54 @@ import {
     AnimatedSprite,
     _ReactPixi,
 } from "@pixi/react";
-import { Texture, Spritesheet, Assets } from "pixi.js";
+import { Texture, Spritesheet } from "pixi.js";
 import { useEffect } from "react";
 import CharSpriteSheet from "../assets/char/spirtesheet.json";
 import CharRunSpriteSheet from "../assets/run/spirtesheet.json";
-import Matter, { Body } from "matter-js";
 
 interface Props {
-    engine: Matter.Engine;
     stage: Stage;
+    engine: object;
+}
+enum MovementDirection {
+    Idle = "idle",
+    Left = "left",
+    Right = "right",
+    Up = "up",
+    Down = "down",
 }
 
-function Player({ engine, stage }: Props) {
+function Player({
+    setPlayerPosition,
+    isColliding,
+    stage,
+    engine,
+    platformTiles,
+    setIsColliding,
+}: Props) {
     const [idleTextures, setIdleTextures] = useState<Texture[]>([]);
     const [runTextures, setRunTextures] = useState<Texture[]>([]);
 
     const [playerX, setPlayerX] = useState<number>(10);
     const [playerY, setPlayerY] = useState<number>(-100);
     const [isRunning, setIsRunning] = useState<boolean>(false);
-    const containerRef = useRef<_ReactPixi.IContainer | null>();
-    const [heroBody, setHeroBody] = useState<Matter.Body>();
+    const [movementDirection, setMovementDirection] =
+        useState<MovementDirection>(MovementDirection.Idle);
 
-    const [isColliding, setIsColliding] = useState(false);
+    const containerRef = useRef<_ReactPixi.IContainer | null>();
+
+    // const [isColliding, setIsColliding] = useState(false);
 
     const documentRef = useRef(document);
+    const playerRef = useRef();
 
     function moveRight() {
-        // setPlayerX((playerX) => playerX + 10);
-        if (heroBody && stage) {
-            console.log("moveRight", playerX, heroBody.position);
-            heroBody.position.x += 0.5;
-            // Matter.Body.applyForce(heroBody, heroBody.position, {
-            //     x: 0.01,
-            //     y: 0,
-            // });
+        if (stage) {
+            containerRef.current.position.x += 0.5;
         }
     }
 
-    function moveLeft(moveBy: number) {
-        if (heroBody) {
-            Matter.Body.setVelocity(heroBody, { x: -2, y: 0 });
-        }
-    }
+    function moveLeft(moveBy: number) {}
 
     async function loadIdleTextures() {
         const ss = new Spritesheet(
@@ -71,56 +77,41 @@ function Player({ engine, stage }: Props) {
     }
 
     function addPhysicsToHero() {
-        const body = Matter.Bodies.rectangle(playerX, playerY, 64, 80, {
-            friction: 0.5,
-            mass: 100000,
-
-            label: "HERO",
+        setPlayerPosition({
+            x: playerX,
+            y: playerY,
         });
-        setHeroBody(body);
-
-        if (engine) {
-            Matter.Composite.add(engine.world, body);
-        }
     }
 
     useTick((delta) => {
-        stage.current.app.stage.position.x = -heroBody.position.x;
-    });
-
-    let testBody: Matter.Body;
-
-    useEffect(() => {
-        const body = Matter.Bodies.rectangle(playerX, playerY, 48, 35, {
-            friction: 0,
-            label: "HERO",
-        });
-        setHeroBody(body);
-
-        if (engine) {
-            Matter.Composite.add(engine.world, body);
-
-            function handleCollision(e) {
-                // console.log("!!! COLIDING", e);
-                // setHeroBody({ ...testBody, velocity: { x: 0, y: 0 } });
-                // containerRef.current.y = 100;
-                // containerRef.current.x = 100;
-                setIsColliding(true);
-                console.log(e, "EVA", e.pairs);
-                if (heroBody) {
-                    heroBody.isStatic = true;
-                    // heroBody.position.y = e.paris.where
-                    e.pairs.forEach((pair) => {
-                        console.log(pair);
-                    });
-                }
+        if (playerRef.current) {
+            if (platformTiles) {
+                // console.log(platformTiles, playerY, playerX);
+                const isColliding = platformTiles.some((tile) => {
+                    return tile.y <= playerY * 2 + 16 && tile.x <= playerX;
+                });
+                setIsColliding(isColliding);
             }
+            if (!isColliding) {
+                playerRef.current.position.y += 0.5;
+                setPlayerY(playerY + 0.5);
 
-            if (engine) {
-                Matter.Events.on(engine, "collisionActive", handleCollision);
+                // if (stage) {
+                //     stage.current.position.y += 0.5;
+                // }
+            }
+            if (movementDirection === MovementDirection.Left) {
+                playerRef.current.position.x -= 0.5;
+                setPlayerX(playerX - 0.5);
+            }
+            if (movementDirection === MovementDirection.Right) {
+                playerRef.current.position.x += 0.5;
+                setPlayerX(playerX + 0.5);
             }
         }
-    }, [engine]);
+    });
+
+    // console.log(stage);
 
     useEffect(() => {
         loadIdleTextures();
@@ -128,18 +119,19 @@ function Player({ engine, stage }: Props) {
         // addPhysicsToHero();
     }, []);
 
-    useEffect(() => {
-        if (playerX !== 10) {
-            setIsRunning(true);
-        }
-    }, [playerX, playerY]);
-
     function handleKeyDown(e: KeyboardEvent) {
         if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") {
-            moveLeft(10);
+            setMovementDirection(MovementDirection.Left);
+            setIsRunning(true);
         } else if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") {
-            moveRight();
+            // moveRight();
+            setMovementDirection(MovementDirection.Right);
+            setIsRunning(true);
         }
+    }
+    function handleKeyUp(e: KeyboardEvent) {
+        setMovementDirection(MovementDirection.Idle);
+        setIsRunning(false);
     }
 
     useEffect(() => {
@@ -148,53 +140,24 @@ function Player({ engine, stage }: Props) {
         return () => {
             documentRef.current.removeEventListener("keydown", handleKeyDown);
         };
-    }, [heroBody]);
+    });
 
-    useTick((delta) => {
-        if (
-            heroBody &&
-            containerRef.current !== undefined &&
-            containerRef.current !== null
-        ) {
-            containerRef.current.x = heroBody.position.x;
-            if (!isColliding) {
-                engine.gravity.x = 0;
-                containerRef.current.y = heroBody.position.y;
-            }
+    useEffect(() => {
+        documentRef.current.addEventListener("keyup", handleKeyUp, true);
 
-            // setHeroBody({
-            //     ...heroBody,
-            //     position: {
-            //         x: containerRef.current.x,
-            //         y: containerRef.current.y,
-            //     },
-            // });
-            // heroBody.position.x = containerRef.current.x;
-            // heroBody.position.y = containerRef.current.y;
-            // setHeroBody({
-            //     ...heroBody,
-            //     position: {
-            //         x: containerRef.current.x + 0.01,
-            //         y: containerRef.current.y + 0.1,
-            //     },
-            // });
-        }
-        // console.log(heroBody?.position);
-        // this.sprite.x = this.body.position.x - this.sprite.width / 2;
-        // this.sprite.y = this.body.position.y - this.sprite.height / 2;
-        // console.log(heroBody?.position);
-        if (testBody) {
-            // console.log(heroBody?.position.y, testBody.position.y, "yoo");
-        }
+        return () => {
+            documentRef.current.removeEventListener("keyup", handleKeyUp);
+        };
     });
 
     return (
-        <Container x={playerX} y={playerY} ref={containerRef}>
+        <Container x={playerX} y={playerY} ref={playerRef}>
             {idleTextures.length > 0 && !isRunning && (
                 <AnimatedSprite
                     textures={idleTextures}
                     isPlaying={true}
                     animationSpeed={0.075}
+                    loop={true}
                 />
             )}
             {runTextures.length > 0 && isRunning && (
@@ -202,6 +165,7 @@ function Player({ engine, stage }: Props) {
                     textures={runTextures}
                     isPlaying={true}
                     animationSpeed={0.075}
+                    loop={true}
                 />
             )}
         </Container>

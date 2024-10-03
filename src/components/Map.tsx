@@ -1,12 +1,14 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { Texture, Spritesheet, Assets, BaseTexture, Rectangle } from "pixi.js";
-import * as PIXI from "pixi.js";
 import { Container, Graphics, Sprite, useTick } from "@pixi/react";
-import map from "../assets/map/map.png";
-import Matter from "matter-js";
+import { TileBody } from "../types";
+import { CompositeTilemap } from "@pixi/tilemap";
+// import atlas from '../assets/map/map.json';
 
 interface Props {
-    engine: Matter.Engine;
+    engine: object;
+    platformTiles: TileBody[];
+    setPlatformTiles: any;
 }
 interface Tile {
     id: string;
@@ -46,23 +48,19 @@ function RectangleFunc(props) {
     return <Graphics draw={draw} />;
 }
 
-function Map({ engine }: Props) {
+function Map({ engine, setPlatformTiles, platformTiles }: Props) {
     const refA = useRef(null);
     const [ss, setSs] = useState<TileMap>();
     const [mapTextures, setMapTextures] = useState<TileData[]>([]);
-    const [tileBodies, setTileBodies] = useState<Matter.Body[]>([]);
+    const [tileBodies, setTileBodies] = useState<TileBody[]>([]);
 
     function addPhysicsToTile(x: number, y: number) {
-        const body = Matter.Bodies.rectangle(x, y, 16, 16, {
-            friction: 0,
-            isStatic: true,
-            frictionStatic: 0,
-        });
-
-        if (engine) {
-            Matter.Composite.add(engine.world, body);
-            setTileBodies((tileBodies) => [...tileBodies, body]);
-        }
+        const tileBody: TileBody = {
+            x: x,
+            y: y,
+        };
+        // setTileBodies((tileBodies) => [...tileBodies, tileBody]);
+        setPlatformTiles((platformTiles) => [...platformTiles, tileBody]);
     }
 
     useEffect(() => {
@@ -77,52 +75,28 @@ function Map({ engine }: Props) {
     useEffect(() => {
         if (ss) {
             const baseText = new BaseTexture("./map/spritesheet.png");
-            console.log(baseText, ss);
-            // baseText.setSize(ss.mapWidth * 16, ss.mapHeight * 16, 1);
+
             const tempMapTextures: TileData[] = [];
             ss.layers.reverse().forEach((s) => {
                 console.log(s);
-                s.tiles.forEach((tile) => {
+                s.data.forEach((tile) => {
                     const yTile = Math.floor(Number(tile.id) / 8);
                     const xTile = Number(tile.id) % 8;
-
-                    console.log(
-                        yTile,
-                        xTile,
-                        tile.x,
-                        Number(tile.id) % 8,
-                        tile.id,
-                        tile.y
-                    );
 
                     const tex = new Texture(
                         baseText,
                         new Rectangle(xTile * 16, yTile * 16, 16, 16)
                     );
-                    console.log(tex, "TEXT");
 
                     addPhysicsToTile(tile.x * 16, tile.y * 16);
                     tempMapTextures.push([tex, tile.x * 16, tile.y * 16]);
                 });
             });
             setMapTextures(tempMapTextures);
-
-            function handleCollision(e) {
-                // console.log("COLIDING !!!!!!!!!", e);
-            }
-
-            console.log(Matter, "yoooo", engine);
-            if (engine) {
-                Matter.Events.on(engine, "collisionActive", handleCollision);
-                console.log("ADDED LISTENER");
-            }
         }
     }, [ss]);
 
-    console.log(mapTextures);
     console.log(tileBodies);
-
-    useTick((delta) => {});
 
     return (
         <Container x={0} y={0}>
