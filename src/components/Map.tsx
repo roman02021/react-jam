@@ -74,29 +74,73 @@ function Map({ engine, setPlatformTiles, platformTiles }: Props) {
 
     useEffect(() => {
         if (ss) {
-            const baseText = new BaseTexture("./map/spritesheet.png");
+            const baseText = new BaseTexture("./map/Assets.png");
 
             const tempMapTextures: TileData[] = [];
-            ss.layers.reverse().forEach((s) => {
-                console.log(s);
-                s.data.forEach((tile) => {
-                    const yTile = Math.floor(Number(tile.id) / 8);
-                    const xTile = Number(tile.id) % 8;
+
+            console.log(ss);
+
+            for (let y = 0; y < ss.height; y++) {
+                for (let x = 0; x < ss.width; x++) {
+                    const id = x + ss.width * y;
+                    const yTile = Math.floor(ss.layers[0].data[id] / 25);
+                    const xTile = ss.layers[0].data[id] % 25;
 
                     const tex = new Texture(
                         baseText,
-                        new Rectangle(xTile * 16, yTile * 16, 16, 16)
+                        new Rectangle(
+                            -16 + xTile * 16,
+                            yTile * 16,
+                            ss.tilewidth,
+                            ss.tileheight
+                        )
                     );
 
-                    addPhysicsToTile(tile.x * 16, tile.y * 16);
-                    tempMapTextures.push([tex, tile.x * 16, tile.y * 16]);
-                });
-            });
+                    // console.log(y, y * 16, id, ss.layers[0].data[id]);
+
+                    //TODO: pories preco tam mas - 16
+
+                    if (ss.layers[0].data[id] !== 0) {
+                        addPhysicsToTile(x * 16, y * 16);
+                        tempMapTextures.push([tex, x * 16, y * 16]);
+                    }
+                }
+            }
+
+            // ss.layers.reverse().forEach((s) => {
+            //     console.log(s);
+            //     // s.tiles.forEach((tile) => {
+            //     //     const yTile = Math.floor(Number(tile.id) / 8);
+            //     //     const xTile = Number(tile.id) % 8;
+
+            //     //     const tex = new Texture(
+            //     //         baseText,
+            //     //         new Rectangle(xTile * 16, yTile * 16, 16, 16)
+            //     //     );
+
+            //     //     addPhysicsToTile(tile.x * 16, tile.y * 16);
+            //     //     tempMapTextures.push([tex, tile.x * 16, tile.y * 16]);
+            //     // });
+
+            //     s.data.map((tile) => {
+            //         console.log(tile);
+            //         const yTile = Math.floor(Number(tile.id) / 8);
+            //         const xTile = Number(tile.id) % 8;
+
+            //         const tex = new Texture(
+            //             baseText,
+            //             new Rectangle(32, 32, 16, 16)
+            //         );
+
+            //         console.log(tex);
+
+            //         // addPhysicsToTile(tile.x * 16, tile.y * 16);
+            //         tempMapTextures.push([tex, tile.x * 16, tile.y * 16]);
+            //     });
+            // });
             setMapTextures(tempMapTextures);
         }
     }, [ss]);
-
-    console.log(tileBodies);
 
     return (
         <Container x={0} y={0}>

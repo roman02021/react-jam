@@ -35,17 +35,18 @@ const App = () => {
         <Stage
             ref={stageRef}
             width={500}
-            height={500}
+            height={400}
             options={{ background: 0x1099bb }}
         >
-            <Container y={250}>
+            <Container ref={containerRef}>
                 <Player
                     setPlayerPosition={setPlayerPosition}
                     isColliding={isColliding}
                     platformTiles={platformTiles}
                     setIsColliding={setIsColliding}
-                    stage={stageRef}
+                    stage={containerRef.current}
                 ></Player>
+
                 <Map
                     setPlatformTiles={setPlatformTiles}
                     platformTiles={platformTiles}
