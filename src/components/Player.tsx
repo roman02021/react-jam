@@ -1,10 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import {
     Stage,
     Container,
     useTick,
     AnimatedSprite,
     _ReactPixi,
+    Graphics,
     useApp,
 } from "@pixi/react";
 import { Texture, Spritesheet } from "pixi.js";
@@ -12,9 +13,16 @@ import { useEffect } from "react";
 import CharSpriteSheet from "../assets/char/spirtesheet.json";
 import CharRunSpriteSheet from "../assets/run/spirtesheet.json";
 
+const X_VELOCITY = 200;
+const JUMP_POWER = 250;
+const GRAVITY = 580;
+const JUMP_HEIGHT = 100;
+
 interface Props {
     stage: Stage;
     engine: object;
+    setCamera: () => void;
+    cameraPosition: Position;
 }
 enum MovementDirection {
     Idle = "idle",
@@ -25,12 +33,25 @@ enum MovementDirection {
     Jump = "jump",
 }
 
+function RectangleFunc(props) {
+    const draw = useCallback(
+        (g) => {
+            g.clear();
+            g.beginFill(props.color);
+            g.drawRect(props.x, props.y, props.width, props.height);
+            g.endFill();
+        },
+        [props]
+    );
+
+    return <Graphics draw={draw} />;
+}
+
 interface MovementDirectionObj {
-    Idle: boolean;
-    Left: boolean;
-    Right: boolean;
-    Up: boolean;
-    Down: boolean;
+    left: boolean;
+    right: boolean;
+    up: boolean;
+    down: boolean;
 }
 
 interface Collision {
@@ -40,6 +61,11 @@ interface Collision {
     down: boolean;
 }
 
+interface Position {
+    x: number;
+    y: number;
+}
+
 function Player({
     setPlayerPosition,
     isColliding,
@@ -47,21 +73,21 @@ function Player({
     engine,
     platformTiles,
     setIsColliding,
+    setCameraPosition,
+    cameraPosition,
 }: Props) {
     const [idleTextures, setIdleTextures] = useState<Texture[]>([]);
     const [runTextures, setRunTextures] = useState<Texture[]>([]);
 
-    const [playerX, setPlayerX] = useState<number>(10);
-    const [playerY, setPlayerY] = useState<number>(-100);
+    const [playerX, setPlayerX] = useState<number>(10 - 25 / 2);
+    const [playerY, setPlayerY] = useState<number>(-100 + 48 / 2);
     const [isRunning, setIsRunning] = useState<boolean>(false);
     const [movementDirection, setMovementDirection] =
         useState<MovementDirectionObj>({
-            Idle: true,
-            Left: false,
-            Right: false,
-            Up: false,
-            Down: false,
-            Jump: false,
+            left: false,
+            right: false,
+            up: false,
+            down: false,
         });
     const [collisionDirection, setCollisionDirection] = useState<Collision>({
         left: false,
@@ -71,7 +97,27 @@ function Player({
     });
     const [isJumping, setIsJumping] = useState<boolean>(false);
     const [jumpHeight, setJumpHeight] = useState<number>(0);
+    const [isFalling, setIsFalling] = useState<boolean>(false);
     const containerRef = useRef<_ReactPixi.IContainer | null>();
+    const [seconds, setSeconds] = useState<number>(0);
+    const [goingLeft, setGoingLeft] = useState<boolean>(false);
+    const [goingRight, setGoingRight] = useState<boolean>(false);
+    const [timeJumping, setTimeJumping] = useState(0);
+    const [jumpStartLocationY, setJumpStartLocationY] = useState<number>(0);
+    const [colTiles, setColTiles] = useState([]);
+    const [doubleJumped, setDoubleJumped] = useState<boolean>(false);
+    const [hitbox, setHitbox] = useState({
+        x: 0,
+        y: 0,
+        width: 25,
+        height: 40,
+    });
+    const [keyPressed, setKeyPressed] = useState<boolean>(false);
+    const [velocity, setVelocity] = useState({
+        x: 0,
+        y: 0,
+    });
+    const [keysPressed, setKeysPressed] = useState<string[]>([]);
 
     const app = useApp();
 
@@ -79,14 +125,6 @@ function Player({
 
     const documentRef = useRef(document);
     const playerRef = useRef();
-
-    function moveRight() {
-        if (stage) {
-            containerRef.current.position.x += 0.5;
-        }
-    }
-
-    function moveLeft(moveBy: number) {}
 
     async function loadIdleTextures() {
         const ss = new Spritesheet(
@@ -99,6 +137,26 @@ function Player({
         setIdleTextures(ss.animations["Idle-Sheet"]);
     }
 
+    function handleHorizontalMovememnt() {
+        // console.log(movementDirection);
+        // if (movementDirection.left && !movementDirection.right) {
+        //     setVelocity({
+        //         ...velocity,
+        //         x: -2,
+        //     });
+        // } else if (movementDirection.right && !movementDirection.left) {
+        //     setVelocity({
+        //         ...velocity,
+        //         x: 2,
+        //     });
+        // } else {
+        //     setVelocity({
+        //         ...velocity,
+        //         x: 0,
+        //     });
+        // }
+    }
+
     async function loadRunningTextures() {
         const ss = new Spritesheet(
             Texture.from(CharRunSpriteSheet.meta.image),
@@ -109,233 +167,263 @@ function Player({
         setRunTextures(ss.animations["Run-Sheet"]);
     }
 
-    function addPhysicsToHero() {
-        setPlayerPosition({
-            x: playerX,
-            y: playerY,
+    function getCollidingTiles(player, tiles) {
+        return tiles.filter((tile) => {
+            if (
+                player.x < tile.x + 16 &&
+                player.x + 25 > tile.x &&
+                player.y < tile.y &&
+                player.y + 48 > tile.y
+            ) {
+                return true;
+            } else {
+                return false;
+            }
         });
     }
-    let seconds = 0;
-    useTick((delta, abc) => {
-        seconds += 1 / 60;
 
-        if (playerRef.current) {
-            if (platformTiles) {
-                const isColliding = platformTiles.some((tile) => {
-                    // return tile.y <= playerY - 32 && tile.x <= playerX;
+    function jump() {}
 
-                    if (
-                        playerRef.current.position.x <= tile.x + 16 &&
-                        playerRef.current.position.x + 35 >= tile.x &&
-                        playerRef.current.position.y <= tile.y &&
-                        playerRef.current.position.y + 48 >= tile.y
-                    ) {
-                        // Collision detected!
-                        // console.log(
-                        //     "Collision detected!",
-                        //     `player: x: ${playerRef.current.position.x}, y: ${playerRef.current.position.y}`,
-                        //     `tile: x: ${tile.x}, y: ${tile.y}`
-                        // );
+    function getCollisionDirections(player, tiles) {
+        const newCollisionDirections = {
+            right: false,
+            left: false,
+            up: false,
+            down: false,
+        };
 
-                        const player_bottom = playerRef.current.position.y + 48;
-                        const tiles_bottom = tile.y + 16;
-                        const player_right = playerRef.current.position.x + 35;
-                        const tiles_right = tile.x + 16;
+        // console.log(tiles);
 
-                        const b_collision =
-                            tiles_bottom - playerRef.current.position.y;
-                        const t_collision = player_bottom - tile.y;
-                        const l_collision = player_right - tile.x;
-                        const r_collision =
-                            tiles_right - playerRef.current.position.x;
+        tiles.forEach((tile) => {
+            //toto si zmenil z 48 na 47 a zrazu sa nespusta lava kolizia ked si na zemi
+            const playerYBottom = Math.floor(player.y) + 48;
+            const tileBottom = tile.y + 16;
+            const playerXRight = Math.floor(player.x) + 25;
+            const tileRight = tile.x + 16;
 
-                        const newCollisionDirections = {
-                            ...collisionDirection,
-                        };
+            const botCollision = playerYBottom - tile.y;
+            const topCollision = tileBottom - Math.floor(player.y);
+            const leftCollision = playerXRight - tile.x;
+            const rightCollision = tileRight - Math.floor(player.x);
 
-                        if (
-                            t_collision < b_collision &&
-                            t_collision < l_collision &&
-                            t_collision < r_collision
-                        ) {
-                            newCollisionDirections.down = true;
-                        } else {
-                            // setCollisionDirection();
-                            newCollisionDirections.down = false;
-                        }
-
-                        if (
-                            b_collision < t_collision &&
-                            b_collision < l_collision &&
-                            b_collision < r_collision
-                        ) {
-                            newCollisionDirections.up = true;
-                        } else {
-                            // setCollisionDirection();
-                            newCollisionDirections.up = false;
-                        }
-                        if (
-                            l_collision < r_collision &&
-                            l_collision < t_collision &&
-                            l_collision < b_collision
-                        ) {
-                            newCollisionDirections.right = true;
-                        } else {
-                            // setCollisionDirection();
-                            newCollisionDirections.right = false;
-                        }
-                        if (
-                            r_collision < l_collision &&
-                            r_collision < t_collision &&
-                            r_collision < b_collision
-                        ) {
-                            newCollisionDirections.left = true;
-                        } else {
-                            // setCollisionDirection();
-                            newCollisionDirections.left = false;
-                        }
-
-                        setCollisionDirection(newCollisionDirections);
-
-                        return true;
-                    } else {
-                        // No collision
-                        return false;
-                    }
-                });
-
-                //TODO: pories preco tam mas - 32
-                setIsColliding(isColliding);
+            if (
+                rightCollision < leftCollision &&
+                rightCollision < botCollision &&
+                rightCollision < topCollision &&
+                newCollisionDirections.right === false
+            ) {
+                newCollisionDirections.right = true;
+            } else if (
+                leftCollision < rightCollision &&
+                leftCollision < botCollision &&
+                leftCollision < topCollision &&
+                newCollisionDirections.left === false
+            ) {
+                newCollisionDirections.left = true;
+            } else if (
+                botCollision + 1 < topCollision &&
+                botCollision + 1 < leftCollision &&
+                botCollision + 1 < rightCollision &&
+                newCollisionDirections.down === false
+            ) {
+                // dal si +1 lebo postava sa prilepila z lavej strany na platformu ked padala
+                // console.log(
+                //     tile,
+                //     playerX,
+                //     playerY,
+                //     "leftCol: ",
+                //     leftCollision,
+                //     "rightCol: ",
+                //     rightCollision,
+                //     "botCol: ",
+                //     botCollision,
+                //     "Col: ",
+                //     topCollision
+                // );
+                newCollisionDirections.down = true;
+            } else if (
+                topCollision < botCollision &&
+                topCollision < leftCollision &&
+                topCollision < rightCollision &&
+                newCollisionDirections.up === false
+            ) {
+                newCollisionDirections.up = true;
             }
-            if (!isColliding && !isJumping) {
-                playerRef.current.position.y += 0.5;
-                setPlayerY(playerY + 0.5);
-                if (stage) {
-                    stage.y -= 0.5;
-                }
-            }
-            if (movementDirection.Left) {
-                if (collisionDirection.left === false) {
-                    playerRef.current.position.x -= 0.5;
-                    setPlayerX(playerX - 0.5);
-                    stage.x += 0.5;
-                }
-            }
-            if (movementDirection.Right) {
-                console.log("COCK");
-                if (collisionDirection.right === false) {
-                    playerRef.current.position.x += 0.5;
-                    setPlayerX(playerX + 0.5);
-                    stage.x -= 0.5;
-                }
-            }
-            if (isJumping) {
-                // console.log(movementDirection);
-                if (collisionDirection.up === false) {
-                    setJumpHeight(jumpHeight + 0.5);
-                    playerRef.current.position.y -= 0.5;
-                    setPlayerY(playerY - 0.5);
-                    stage.y += 0.5;
+        });
 
-                    if (jumpHeight >= 30) {
-                        console.log("STOPPED JUMPING");
+        return newCollisionDirections;
+    }
 
-                        setIsJumping(false);
-                        setJumpHeight(0);
-                    }
-                }
+    useTick((delta) => {
+        let collisionDirection = {
+            right: false,
+            left: false,
+            up: false,
+            down: false,
+        };
+        if (platformTiles) {
+            const collidingTiles = getCollidingTiles(
+                {
+                    x: playerX,
+                    y: playerY,
+                },
+                platformTiles
+            );
+
+            setColTiles(collidingTiles);
+
+            if (collidingTiles.length > 0) {
+                collisionDirection = getCollisionDirections(
+                    { x: playerX, y: playerY },
+                    collidingTiles
+                );
             }
         }
+        const horVel = {
+            ...velocity,
+        };
 
-        if (seconds > 1) {
-            seconds = 0;
+        if (goingRight && !collisionDirection.left) {
+            horVel.x += 2;
         }
+
+        if (goingLeft && !collisionDirection.right) {
+            horVel.x -= 2;
+        }
+
+        if (!isJumping && !collisionDirection.down) {
+            horVel.y += 2;
+        }
+        if (collisionDirection.down) {
+            setDoubleJumped(false);
+            if (isFalling) {
+                setIsFalling(false);
+            }
+        }
+        if (isJumping && !collisionDirection.up) {
+            horVel.y -= 2;
+            setJumpHeight(jumpHeight + 2);
+        }
+        if (jumpHeight > JUMP_HEIGHT) {
+            setJumpHeight(0);
+            setIsJumping(false);
+            setIsFalling(true);
+        }
+
+        setPlayerX(playerX + horVel.x * delta);
+        setPlayerY(playerY + horVel.y * delta);
+
+        setCollisionDirection(collisionDirection);
     });
+
+    useEffect(() => {
+        setCameraPosition({
+            x: app.stage.width / 2 - playerX,
+            y: app.stage.height / 2 - playerY,
+        });
+    }, [playerX, playerY]);
 
     useEffect(() => {
         loadIdleTextures();
         loadRunningTextures();
-
-        // addPhysicsToHero();
     }, []);
 
     useEffect(() => {
-        if (stage) {
-            stage.x = app.view.width / 2;
-            stage.y = app.view.height / 2;
-            stage.pivot.x = 200;
-            stage.pivot.y = 100;
+        function handleKeyDown(e: KeyboardEvent) {
+            if (
+                (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") &&
+                !e.repeat
+            ) {
+                setGoingLeft(true);
+            } else if (
+                (e.key === "ArrowRight" || e.key === "d" || e.key === "D") &&
+                !e.repeat
+            ) {
+                setGoingRight(true);
+            } else if (e.key === "Space" || e.key === "w" || e.key === "W") {
+                if (collisionDirection.down) {
+                    setIsJumping(true);
+                    setJumpHeight(0);
+                } else if ((isJumping || isFalling) && !doubleJumped) {
+                    setDoubleJumped(true);
+                    setIsJumping(true);
+                    setJumpHeight(0);
+                }
+            }
         }
-    }, [stage]);
+        documentRef.current.addEventListener("keydown", handleKeyDown);
 
-    function handleKeyDown(e: KeyboardEvent) {
-        if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") {
-            setMovementDirection({
-                ...movementDirection,
-                Left: true,
-            });
-            setIsRunning(true);
-        } else if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") {
-            setMovementDirection({
-                ...movementDirection,
-                Right: true,
-            });
-            setIsRunning(true);
-        } else if (e.key === "Space" || e.key === "w" || e.key === "W") {
-            setIsJumping(true);
+        function handleKeyUp(e: KeyboardEvent) {
+            console.log(e);
+            if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") {
+                setGoingLeft(false);
+            } else if (
+                e.key === "ArrowRight" ||
+                e.key === "d" ||
+                e.key === "D"
+            ) {
+                setGoingRight(false);
+            }
         }
-    }
-    function handleKeyUp(e: KeyboardEvent) {
-        if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") {
-            setMovementDirection({
-                ...movementDirection,
-                Left: false,
-            });
-        } else if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") {
-            setMovementDirection({
-                ...movementDirection,
-                Right: false,
-            });
-        }
-
-        setIsRunning(false);
-    }
-
-    useEffect(() => {
-        documentRef.current.addEventListener("keydown", handleKeyDown, true);
+        documentRef.current.addEventListener("keyup", handleKeyUp);
 
         return () => {
             documentRef.current.removeEventListener("keydown", handleKeyDown);
-        };
-    }, []);
-
-    useEffect(() => {
-        documentRef.current.addEventListener("keyup", handleKeyUp, true);
-
-        return () => {
             documentRef.current.removeEventListener("keyup", handleKeyUp);
         };
-    }, []);
+    }, [collisionDirection]);
 
     return (
-        <Container x={playerX} y={playerY} ref={playerRef}>
-            {idleTextures.length > 0 && !isRunning && (
-                <AnimatedSprite
-                    textures={idleTextures}
-                    isPlaying={true}
-                    animationSpeed={0.075}
-                    loop={true}
+        <>
+            <Container x={playerX} y={playerY} ref={playerRef}>
+                {idleTextures.length > 0 && !isRunning && (
+                    <AnimatedSprite
+                        textures={idleTextures}
+                        isPlaying={true}
+                        animationSpeed={0.075}
+                        loop={true}
+                        height={48}
+                    />
+                )}
+                {runTextures.length > 0 && isRunning && (
+                    <AnimatedSprite
+                        textures={runTextures}
+                        isPlaying={true}
+                        animationSpeed={0.075}
+                        loop={true}
+                        height={48}
+                    />
+                )}
+            </Container>
+            {/* <RectangleFunc
+                x={playerX}
+                y={playerY}
+                width={25}
+                height={48}
+                color={0x0000ff}
+            /> */}
+
+            {isColliding && (
+                <RectangleFunc
+                    x={playerX}
+                    y={playerY}
+                    width={25}
+                    height={48}
+                    color={0xa020f0}
                 />
             )}
-            {runTextures.length > 0 && isRunning && (
-                <AnimatedSprite
-                    textures={runTextures}
-                    isPlaying={true}
-                    animationSpeed={0.075}
-                    loop={true}
-                />
-            )}
-        </Container>
+            {colTiles &&
+                colTiles.map((tile, index) => (
+                    <RectangleFunc
+                        key={index}
+                        x={tile.x}
+                        y={tile.y}
+                        width={16}
+                        height={16}
+                        color={0x00ff00}
+                    />
+                ))}
+        </>
     );
 }
 

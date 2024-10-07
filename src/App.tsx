@@ -4,17 +4,14 @@ import Player from "./components/Player";
 import Map from "./components/Map";
 
 import { BlurFilter, TextStyle } from "pixi.js";
-import {
-    Stage,
-    Container,
-    Sprite,
-    Text,
-    useApp,
-    useTick,
-    _ReactPixi,
-} from "@pixi/react";
+import { Stage, Container, _ReactPixi } from "@pixi/react";
 import usePhysics from "./hooks/usePhysics";
 import { TileBody } from "./types";
+
+interface Position {
+    x: number;
+    y: number;
+}
 
 const App = () => {
     const blurFilter = useMemo(() => new BlurFilter(2), []);
@@ -22,6 +19,10 @@ const App = () => {
     const [platformTiles, setPlatformTiles] = useState<TileBody[]>([]);
     const [playerPosition, setPlayerPosition] = useState<TileBody>();
     const [isColliding, setIsColliding] = useState<boolean>(false);
+    const [cameraPosition, setCameraPosition] = useState<Position>({
+        x: 0,
+        y: 0,
+    });
 
     const containerRef = useRef(null);
     const stageRef = useRef(null);
@@ -31,6 +32,8 @@ const App = () => {
     //     console.log(stageRef.current);
     // }
 
+    // console.log(cameraPosition, "YOOO");
+
     return (
         <Stage
             ref={stageRef}
@@ -38,19 +41,19 @@ const App = () => {
             height={400}
             options={{ background: 0x1099bb }}
         >
-            <Container ref={containerRef}>
+            <Container x={cameraPosition.x} y={cameraPosition.y}>
+                <Map
+                    setPlatformTiles={setPlatformTiles}
+                    platformTiles={platformTiles}
+                />
                 <Player
                     setPlayerPosition={setPlayerPosition}
                     isColliding={isColliding}
                     platformTiles={platformTiles}
                     setIsColliding={setIsColliding}
-                    stage={containerRef.current}
+                    setCameraPosition={setCameraPosition}
+                    cameraPosition={cameraPosition}
                 ></Player>
-
-                <Map
-                    setPlatformTiles={setPlatformTiles}
-                    platformTiles={platformTiles}
-                />
             </Container>
         </Stage>
     );
