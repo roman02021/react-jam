@@ -1,0 +1,118 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "player-idle.tsx",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "": {
+            "scaleInDock": 1
+        },
+        "#grass_5": {
+            "dynamicWrapping": false
+        },
+        "#testos": {
+            "dynamicWrapping": true
+        },
+        "Assets.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 3
+        },
+        "Idle-Sheet.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "char-idle-2.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "char-idle-3.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "char-idle.tsj": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "char-idle.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "level-1.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 4
+        },
+        "platforms-map.tmx": {
+            "scale": 8,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": -52.6875,
+                "y": -16.5
+            }
+        },
+        "platforms.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 2
+        },
+        "player-idle.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "player-tiles.tsx": {
+            "dynamicWrapping": true
+        },
+        "untitled.tmx": {
+            "scale": 2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 101.25,
+                "y": 122
+            }
+        },
+        "untitled.tmx#testos": {
+            "scaleInDock": 1
+        }
+    },
+    "frame.defaultDuration": 150,
+    "last.exportedFilePath": "C:/Projects/react-jam-2024/tiled",
+    "last.imagePath": "C:/Projects/react-jam-2024/tiled/Adventurer/Individual Sprites",
+    "lastUsedTilesetExportFilter": "JSON tileset files (*.tsj *.json)",
+    "map.fixedSize": false,
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "openFiles": [
+        "platforms-map.tmx",
+        "platforms.tsx",
+        "player-idle.tsx"
+    ],
+    "project": "react-jam.tiled-project",
+    "recentFiles": [
+        "Assets.tsx",
+        "level-1.tsx",
+        "platforms-map.tmx",
+        "platforms.tsx",
+        "player-idle.tsx",
+        "char-idle-3.tsx",
+        "char-idle.tsx",
+        "char-idle-2.tsx",
+        "Idle-Sheet.tsx",
+        "char-idle.tsj"
+    ],
+    "tileset.embedInMap": true,
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.margin": 1,
+    "tileset.spacing": 0,
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    },
+    "tileset.type": 0
+}

@@ -1,0 +1,51 @@
+{
+    "columns": 0,
+    "grid": {
+        "height": 1,
+        "orientation": "orthogonal",
+        "width": 1
+    },
+    "margin": 0,
+    "name": "char-idle",
+    "spacing": 0,
+    "tilecount": 3,
+    "tiledversion": "1.11.0",
+    "tileheight": 37,
+    "tiles": [
+        {
+            "id": 0,
+            "image": "assets/char/idle/adventurer-idle-02.png",
+            "imageheight": 37,
+            "imagewidth": 50
+        },
+        {
+            "id": 1,
+            "image": "assets/char/idle/adventurer-idle-00.png",
+            "imageheight": 37,
+            "imagewidth": 50
+        },
+        {
+            "animation": [
+                {
+                    "duration": 150,
+                    "tileid": 0
+                },
+                {
+                    "duration": 150,
+                    "tileid": 1
+                },
+                {
+                    "duration": 150,
+                    "tileid": 2
+                }
+            ],
+            "id": 2,
+            "image": "assets/char/idle/adventurer-idle-01.png",
+            "imageheight": 37,
+            "imagewidth": 50
+        }
+    ],
+    "tilewidth": 50,
+    "type": "tileset",
+    "version": "1.10"
+}

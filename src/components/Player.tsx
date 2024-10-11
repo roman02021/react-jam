@@ -12,12 +12,16 @@ import { Texture, Spritesheet } from "pixi.js";
 import { useEffect } from "react";
 import CharSpriteSheet from "../assets/char/spirtesheet.json";
 import CharRunSpriteSheet from "../assets/run/spirtesheet.json";
+import { loadTexture } from "../system/loadTexture";
+import PlayerAnimations from "../assets/char/player-animations.json";
+import constants from "../constants.ts";
+import { PlayerAnimationsType } from "../types.ts";
 
-const X_VELOCITY = 200;
-const JUMP_POWER = 250;
-const GRAVITY = 580;
-const JUMP_HEIGHT = 100;
-
+import {
+    checkPlayerTerrainCollisions,
+    getPlayerTerrainCollisionDirections,
+} from "../system/checkCollisions";
+import { CollisionTile } from "../types.ts";
 interface Props {
     stage: Stage;
     engine: object;
@@ -79,9 +83,12 @@ function Player({
     const [idleTextures, setIdleTextures] = useState<Texture[]>([]);
     const [runTextures, setRunTextures] = useState<Texture[]>([]);
 
-    const [playerX, setPlayerX] = useState<number>(10 - 25 / 2);
-    const [playerY, setPlayerY] = useState<number>(-100 + 48 / 2);
+    const [playerX, setPlayerX] = useState<number>(constants.CHAR_WIDTH / 2);
+    const [playerY, setPlayerY] = useState<number>(constants.CHAR_HEIGHT / 2);
     const [isRunning, setIsRunning] = useState<boolean>(false);
+    const [currentAnimation, setCurrentAnimation] = useState<Texture[]>();
+    const [playerAnimations, setPlayerAnimations] =
+        useState<PlayerAnimationsType>();
     const [movementDirection, setMovementDirection] =
         useState<MovementDirectionObj>({
             left: false,
@@ -104,7 +111,7 @@ function Player({
     const [goingRight, setGoingRight] = useState<boolean>(false);
     const [timeJumping, setTimeJumping] = useState(0);
     const [jumpStartLocationY, setJumpStartLocationY] = useState<number>(0);
-    const [colTiles, setColTiles] = useState([]);
+    const [colTiles, setColTiles] = useState<CollisionTile[]>([]);
     const [doubleJumped, setDoubleJumped] = useState<boolean>(false);
     const [hitbox, setHitbox] = useState({
         x: 0,
@@ -112,147 +119,15 @@ function Player({
         width: 25,
         height: 40,
     });
-    const [keyPressed, setKeyPressed] = useState<boolean>(false);
     const [velocity, setVelocity] = useState({
         x: 0,
         y: 0,
     });
-    const [keysPressed, setKeysPressed] = useState<string[]>([]);
 
     const app = useApp();
 
-    // const [isColliding, setIsColliding] = useState(false);
-
     const documentRef = useRef(document);
     const playerRef = useRef();
-
-    async function loadIdleTextures() {
-        const ss = new Spritesheet(
-            Texture.from(CharSpriteSheet.meta.image),
-            CharSpriteSheet
-        );
-
-        await ss.parse();
-
-        setIdleTextures(ss.animations["Idle-Sheet"]);
-    }
-
-    function handleHorizontalMovememnt() {
-        // console.log(movementDirection);
-        // if (movementDirection.left && !movementDirection.right) {
-        //     setVelocity({
-        //         ...velocity,
-        //         x: -2,
-        //     });
-        // } else if (movementDirection.right && !movementDirection.left) {
-        //     setVelocity({
-        //         ...velocity,
-        //         x: 2,
-        //     });
-        // } else {
-        //     setVelocity({
-        //         ...velocity,
-        //         x: 0,
-        //     });
-        // }
-    }
-
-    async function loadRunningTextures() {
-        const ss = new Spritesheet(
-            Texture.from(CharRunSpriteSheet.meta.image),
-            CharRunSpriteSheet
-        );
-
-        await ss.parse();
-        setRunTextures(ss.animations["Run-Sheet"]);
-    }
-
-    function getCollidingTiles(player, tiles) {
-        return tiles.filter((tile) => {
-            if (
-                player.x < tile.x + 16 &&
-                player.x + 25 > tile.x &&
-                player.y < tile.y &&
-                player.y + 48 > tile.y
-            ) {
-                return true;
-            } else {
-                return false;
-            }
-        });
-    }
-
-    function jump() {}
-
-    function getCollisionDirections(player, tiles) {
-        const newCollisionDirections = {
-            right: false,
-            left: false,
-            up: false,
-            down: false,
-        };
-
-        // console.log(tiles);
-
-        tiles.forEach((tile) => {
-            //toto si zmenil z 48 na 47 a zrazu sa nespusta lava kolizia ked si na zemi
-            const playerYBottom = Math.floor(player.y) + 48;
-            const tileBottom = tile.y + 16;
-            const playerXRight = Math.floor(player.x) + 25;
-            const tileRight = tile.x + 16;
-
-            const botCollision = playerYBottom - tile.y;
-            const topCollision = tileBottom - Math.floor(player.y);
-            const leftCollision = playerXRight - tile.x;
-            const rightCollision = tileRight - Math.floor(player.x);
-
-            if (
-                rightCollision < leftCollision &&
-                rightCollision < botCollision &&
-                rightCollision < topCollision &&
-                newCollisionDirections.right === false
-            ) {
-                newCollisionDirections.right = true;
-            } else if (
-                leftCollision < rightCollision &&
-                leftCollision < botCollision &&
-                leftCollision < topCollision &&
-                newCollisionDirections.left === false
-            ) {
-                newCollisionDirections.left = true;
-            } else if (
-                botCollision + 1 < topCollision &&
-                botCollision + 1 < leftCollision &&
-                botCollision + 1 < rightCollision &&
-                newCollisionDirections.down === false
-            ) {
-                // dal si +1 lebo postava sa prilepila z lavej strany na platformu ked padala
-                // console.log(
-                //     tile,
-                //     playerX,
-                //     playerY,
-                //     "leftCol: ",
-                //     leftCollision,
-                //     "rightCol: ",
-                //     rightCollision,
-                //     "botCol: ",
-                //     botCollision,
-                //     "Col: ",
-                //     topCollision
-                // );
-                newCollisionDirections.down = true;
-            } else if (
-                topCollision < botCollision &&
-                topCollision < leftCollision &&
-                topCollision < rightCollision &&
-                newCollisionDirections.up === false
-            ) {
-                newCollisionDirections.up = true;
-            }
-        });
-
-        return newCollisionDirections;
-    }
 
     useTick((delta) => {
         let collisionDirection = {
@@ -262,7 +137,7 @@ function Player({
             down: false,
         };
         if (platformTiles) {
-            const collidingTiles = getCollidingTiles(
+            const collidingTiles = checkPlayerTerrainCollisions(
                 {
                     x: playerX,
                     y: playerY,
@@ -273,7 +148,7 @@ function Player({
             setColTiles(collidingTiles);
 
             if (collidingTiles.length > 0) {
-                collisionDirection = getCollisionDirections(
+                collisionDirection = getPlayerTerrainCollisionDirections(
                     { x: playerX, y: playerY },
                     collidingTiles
                 );
@@ -301,10 +176,10 @@ function Player({
             }
         }
         if (isJumping && !collisionDirection.up) {
-            horVel.y -= 2;
-            setJumpHeight(jumpHeight + 2);
+            horVel.y -= 4;
+            setJumpHeight(jumpHeight + 4);
         }
-        if (jumpHeight > JUMP_HEIGHT) {
+        if (jumpHeight > constants.JUMP_HEIGHT) {
             setJumpHeight(0);
             setIsJumping(false);
             setIsFalling(true);
@@ -323,10 +198,7 @@ function Player({
         });
     }, [playerX, playerY]);
 
-    useEffect(() => {
-        loadIdleTextures();
-        loadRunningTextures();
-    }, []);
+    // console.log(currentAnimation);
 
     useEffect(() => {
         function handleKeyDown(e: KeyboardEvent) {
@@ -344,6 +216,7 @@ function Player({
                 if (collisionDirection.down) {
                     setIsJumping(true);
                     setJumpHeight(0);
+                    setJumpTime(0);
                 } else if ((isJumping || isFalling) && !doubleJumped) {
                     setDoubleJumped(true);
                     setIsJumping(true);
@@ -372,26 +245,33 @@ function Player({
             documentRef.current.removeEventListener("keyup", handleKeyUp);
         };
     }, [collisionDirection]);
+    useEffect(() => {
+        const playerAnimationsLoaded = loadTexture(PlayerAnimations);
+        setPlayerAnimations(playerAnimationsLoaded);
+        console.log(playerAnimations);
+        setCurrentAnimation(playerAnimationsLoaded.idle);
+    }, []);
+
+    console.log(currentAnimation);
 
     return (
         <>
             <Container x={playerX} y={playerY} ref={playerRef}>
                 {idleTextures.length > 0 && !isRunning && (
                     <AnimatedSprite
-                        textures={idleTextures}
+                        textures={currentAnimation}
                         isPlaying={true}
                         animationSpeed={0.075}
                         loop={true}
-                        height={48}
+                        anchor={{ x: 0.25, y: 0 }}
                     />
                 )}
                 {runTextures.length > 0 && isRunning && (
                     <AnimatedSprite
-                        textures={runTextures}
+                        textures={currentAnimation}
                         isPlaying={true}
                         animationSpeed={0.075}
                         loop={true}
-                        height={48}
                     />
                 )}
             </Container>
@@ -418,8 +298,8 @@ function Player({
                         key={index}
                         x={tile.x}
                         y={tile.y}
-                        width={16}
-                        height={16}
+                        width={tile.width}
+                        height={tile.height}
                         color={0x00ff00}
                     />
                 ))}

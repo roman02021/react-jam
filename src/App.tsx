@@ -37,8 +37,8 @@ const App = () => {
     return (
         <Stage
             ref={stageRef}
-            width={500}
-            height={400}
+            width={800}
+            height={600}
             options={{ background: 0x1099bb }}
         >
             <Container x={cameraPosition.x} y={cameraPosition.y}>

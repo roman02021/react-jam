@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="1" nextlayerid="2" nextobjectid="1">
+ <editorsettings>
+  <export target="test.json" format="json"/>
+ </editorsettings>
+ <tileset firstgid="1" source="platforms.tsx"/>
+ <tileset firstgid="626" name="testos" tilewidth="16" tileheight="16" tilecount="16" columns="0">
+  <grid orientation="orthogonal" width="1" height="1"/>
+  <tile id="0">
+   <image source="forest_tileset_lite/forest_tileset_lite/Sprites/Tile/Grass/grass_1.png" width="16" height="16"/>
+  </tile>
+  <tile id="1">
+   <image source="forest_tileset_lite/forest_tileset_lite/Sprites/Tile/Grass/grass_2.png" width="16" height="16"/>
+  </tile>
+  <tile id="2">
+   <image source="forest_tileset_lite/forest_tileset_lite/Sprites/Tile/Grass/grass_3.png" width="16" height="16"/>
+  </tile>
+  <tile id="3">
+   <image source="forest_tileset_lite/forest_tileset_lite/Sprites/Tile/Grass/grass_4.png" width="16" height="16"/>
+  </tile>
+  <tile id="4">
+   <image source="forest_tileset_lite/forest_tileset_lite/Sprites/Tile/Grass/grass_5.png" width="16" height="16"/>
+  </tile>
+  <tile id="5">
+   <image source="forest_tileset_lite/forest_tileset_lite/Sprites/Tile/Ground/ground_1.png" width="16" height="16"/>
+  </tile>
+  <tile id="6">
+   <image source="forest_tileset_lite/forest_tileset_lite/Sprites/Tile/Ground/ground_2.png" width="16" height="16"/>
+  </tile>
+  <tile id="7">
+   <image source="forest_tileset_lite/forest_tileset_lite/Sprites/Tile/Ground/ground_3.png" width="16" height="16"/>
+  </tile>
+  <tile id="8">
+   <image source="forest_tileset_lite/forest_tileset_lite/Sprites/Tile/Ground/ground_4.png" width="16" height="16"/>
+  </tile>
+  <tile id="9">
+   <image source="forest_tileset_lite/forest_tileset_lite/Sprites/Tile/Ground/ground_5.png" width="16" height="16"/>
+  </tile>
+  <tile id="10">
+   <image source="forest_tileset_lite/forest_tileset_lite/Sprites/Tile/Ground/ground_6.png" width="16" height="16"/>
+  </tile>
+  <tile id="11">
+   <image source="forest_tileset_lite/forest_tileset_lite/Sprites/Tile/Ground/ground_7.png" width="16" height="16"/>
+  </tile>
+  <tile id="12">
+   <image source="forest_tileset_lite/forest_tileset_lite/Sprites/Tile/Ground/ground_8.png" width="16" height="16"/>
+  </tile>
+  <tile id="13">
+   <image source="forest_tileset_lite/forest_tileset_lite/Sprites/Tile/Ground/ground_9.png" width="16" height="16"/>
+  </tile>
+  <tile id="14">
+   <image source="forest_tileset_lite/forest_tileset_lite/Sprites/Tile/Ground/ground_10.png" width="16" height="16"/>
+  </tile>
+  <tile id="15">
+   <image source="forest_tileset_lite/forest_tileset_lite/Sprites/Tile/Ground/ground_11.png" width="16" height="16"/>
+  </tile>
+ </tileset>
+ <layer id="1" name="Tile Layer 1" width="30" height="20">
+  <data encoding="csv">
+   <chunk x="0" y="0" width="16" height="16">
+3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</chunk>
+  </data>
+ </layer>
+</map>

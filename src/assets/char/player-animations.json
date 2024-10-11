@@ -1,0 +1,678 @@
+{
+    "columns": 0,
+    "grid": {
+        "height": 1,
+        "orientation": "orthogonal",
+        "width": 1
+    },
+    "margin": 0,
+    "name": "char-idle",
+    "spacing": 0,
+    "tilecount": 28,
+    "tiledversion": "1.11.0",
+    "tileheight": 37,
+    "tiles": [
+        {
+            "id": 0,
+            "image": "assets/char/idle/adventurer-idle-02.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "idle"
+                }
+            ],
+            "type": "PlayerCharacter"
+        },
+        {
+            "id": 1,
+            "image": "assets/char/idle/adventurer-idle-00.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "idle"
+                }
+            ],
+            "type": "PlayerCharacter"
+        },
+        {
+            "animation": [
+                {
+                    "duration": 150,
+                    "tileid": 0
+                },
+                {
+                    "duration": 150,
+                    "tileid": 1
+                },
+                {
+                    "duration": 150,
+                    "tileid": 2
+                }
+            ],
+            "id": 2,
+            "image": "assets/char/idle/adventurer-idle-01.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "idle"
+                }
+            ],
+            "type": "PlayerCharacter"
+        },
+        {
+            "id": 4,
+            "image": "assets/char/running/adventurer-run-00.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "objectgroup": {
+                "draworder": "index",
+                "name": "",
+                "objects": [
+                    {
+                        "height": 28,
+                        "id": 5,
+                        "name": "",
+                        "rotation": 0,
+                        "type": "",
+                        "visible": true,
+                        "width": 20,
+                        "x": 17,
+                        "y": 8
+                    }
+                ],
+                "opacity": 1,
+                "type": "objectgroup",
+                "visible": true,
+                "x": 0,
+                "y": 0
+            },
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "running"
+                }
+            ],
+            "type": "PlayerCharacter"
+        },
+        {
+            "id": 5,
+            "image": "assets/char/running/adventurer-run-01.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "objectgroup": {
+                "draworder": "index",
+                "name": "",
+                "objects": [
+                    {
+                        "height": 27,
+                        "id": 1,
+                        "name": "",
+                        "rotation": 0,
+                        "type": "",
+                        "visible": true,
+                        "width": 20,
+                        "x": 16,
+                        "y": 9
+                    }
+                ],
+                "opacity": 1,
+                "type": "objectgroup",
+                "visible": true,
+                "x": 0,
+                "y": 0
+            },
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "running"
+                }
+            ],
+            "type": "PlayerCharacter"
+        },
+        {
+            "id": 6,
+            "image": "assets/char/running/adventurer-run-02.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "objectgroup": {
+                "draworder": "index",
+                "name": "",
+                "objects": [
+                    {
+                        "height": 25,
+                        "id": 1,
+                        "name": "",
+                        "rotation": 0,
+                        "type": "",
+                        "visible": true,
+                        "width": 20,
+                        "x": 16,
+                        "y": 11
+                    }
+                ],
+                "opacity": 1,
+                "type": "objectgroup",
+                "visible": true,
+                "x": 0,
+                "y": 0
+            },
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "running"
+                }
+            ],
+            "type": "PlayerCharacter"
+        },
+        {
+            "id": 7,
+            "image": "assets/char/running/adventurer-run-03.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "objectgroup": {
+                "draworder": "index",
+                "name": "",
+                "objects": [
+                    {
+                        "height": 27.75,
+                        "id": 1,
+                        "name": "",
+                        "rotation": 0,
+                        "type": "",
+                        "visible": true,
+                        "width": 23,
+                        "x": 15.75,
+                        "y": 8.5
+                    },
+                    {
+                        "height": 28,
+                        "id": 2,
+                        "name": "",
+                        "rotation": 0,
+                        "type": "",
+                        "visible": true,
+                        "width": 23,
+                        "x": 17,
+                        "y": 8
+                    }
+                ],
+                "opacity": 1,
+                "type": "objectgroup",
+                "visible": true,
+                "x": 0,
+                "y": 0
+            },
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "running"
+                }
+            ],
+            "type": "PlayerCharacter"
+        },
+        {
+            "id": 8,
+            "image": "assets/char/running/adventurer-run-04.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "objectgroup": {
+                "draworder": "index",
+                "name": "",
+                "objects": [
+                    {
+                        "height": 27,
+                        "id": 1,
+                        "name": "",
+                        "rotation": 0,
+                        "type": "",
+                        "visible": true,
+                        "width": 20,
+                        "x": 16,
+                        "y": 9
+                    }
+                ],
+                "opacity": 1,
+                "type": "objectgroup",
+                "visible": true,
+                "x": 0,
+                "y": 0
+            },
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "running"
+                }
+            ],
+            "type": "PlayerCharacter"
+        },
+        {
+            "animation": [
+                {
+                    "duration": 150,
+                    "tileid": 4
+                },
+                {
+                    "duration": 150,
+                    "tileid": 5
+                },
+                {
+                    "duration": 150,
+                    "tileid": 6
+                },
+                {
+                    "duration": 150,
+                    "tileid": 7
+                },
+                {
+                    "duration": 150,
+                    "tileid": 8
+                },
+                {
+                    "duration": 150,
+                    "tileid": 9
+                }
+            ],
+            "id": 9,
+            "image": "assets/char/running/adventurer-run-05.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "objectgroup": {
+                "draworder": "index",
+                "name": "",
+                "objects": [
+                    {
+                        "height": 25,
+                        "id": 1,
+                        "name": "",
+                        "rotation": 0,
+                        "type": "",
+                        "visible": true,
+                        "width": 20,
+                        "x": 16,
+                        "y": 11
+                    }
+                ],
+                "opacity": 1,
+                "type": "objectgroup",
+                "visible": true,
+                "x": 0,
+                "y": 0
+            },
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "running"
+                }
+            ],
+            "type": "PlayerCharacter"
+        },
+        {
+            "id": 10,
+            "image": "assets/char/jump/adventurer-jump-00.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "jump"
+                }
+            ],
+            "type": "PlayerCharacter"
+        },
+        {
+            "id": 11,
+            "image": "assets/char/jump/adventurer-jump-01.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "jump"
+                }
+            ],
+            "type": "PlayerCharacter"
+        },
+        {
+            "id": 12,
+            "image": "assets/char/jump/adventurer-jump-02.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "jump"
+                }
+            ],
+            "type": "PlayerCharacter"
+        },
+        {
+            "animation": [
+                {
+                    "duration": 150,
+                    "tileid": 10
+                },
+                {
+                    "duration": 150,
+                    "tileid": 11
+                },
+                {
+                    "duration": 150,
+                    "tileid": 12
+                },
+                {
+                    "duration": 150,
+                    "tileid": 13
+                }
+            ],
+            "id": 13,
+            "image": "assets/char/jump/adventurer-jump-03.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "jump"
+                }
+            ],
+            "type": "PlayerCharacter"
+        },
+        {
+            "id": 14,
+            "image": "Adventurer/Individual Sprites/adventurer-attack1-01.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "attack-k1"
+                }
+            ],
+            "type": "PlayerCharacter"
+        },
+        {
+            "id": 15,
+            "image": "Adventurer/Individual Sprites/adventurer-attack1-02.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "attack-k1"
+                }
+            ],
+            "type": "PlayerCharacter"
+        },
+        {
+            "id": 16,
+            "image": "Adventurer/Individual Sprites/adventurer-attack1-03.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "attack-k1"
+                }
+            ],
+            "type": "PlayerCharacter"
+        },
+        {
+            "id": 17,
+            "image": "Adventurer/Individual Sprites/adventurer-attack1-04.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "attack-k1"
+                }
+            ],
+            "type": "PlayerCharacter"
+        },
+        {
+            "animation": [
+                {
+                    "duration": 150,
+                    "tileid": 14
+                },
+                {
+                    "duration": 150,
+                    "tileid": 15
+                },
+                {
+                    "duration": 150,
+                    "tileid": 16
+                },
+                {
+                    "duration": 150,
+                    "tileid": 17
+                },
+                {
+                    "duration": 150,
+                    "tileid": 18
+                }
+            ],
+            "id": 18,
+            "image": "Adventurer/Individual Sprites/adventurer-attack1-00.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "attack-k1"
+                }
+            ],
+            "type": "PlayerCharacter"
+        },
+        {
+            "animation": [
+                {
+                    "duration": 150,
+                    "tileid": 19
+                },
+                {
+                    "duration": 150,
+                    "tileid": 20
+                },
+                {
+                    "duration": 150,
+                    "tileid": 21
+                },
+                {
+                    "duration": 150,
+                    "tileid": 22
+                },
+                {
+                    "duration": 150,
+                    "tileid": 23
+                },
+                {
+                    "duration": 150,
+                    "tileid": 24
+                }
+            ],
+            "id": 19,
+            "image": "Adventurer/Individual Sprites/adventurer-attack2-00.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "attack-k2"
+                }
+            ],
+            "type": "PlayerCharacter"
+        },
+        {
+            "id": 20,
+            "image": "Adventurer/Individual Sprites/adventurer-attack2-01.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "attack-k2"
+                }
+            ],
+            "type": "PlayerCharacter"
+        },
+        {
+            "id": 21,
+            "image": "Adventurer/Individual Sprites/adventurer-attack2-02.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "attack-k2"
+                }
+            ],
+            "type": "PlayerCharacter"
+        },
+        {
+            "id": 22,
+            "image": "Adventurer/Individual Sprites/adventurer-attack2-03.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "attack-k2"
+                }
+            ],
+            "type": "PlayerCharacter"
+        },
+        {
+            "id": 23,
+            "image": "Adventurer/Individual Sprites/adventurer-attack2-04.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "attack-k2"
+                }
+            ],
+            "type": "PlayerCharacter"
+        },
+        {
+            "id": 24,
+            "image": "Adventurer/Individual Sprites/adventurer-attack2-05.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "attack-k2"
+                }
+            ],
+            "type": "PlayerCharacter"
+        },
+        {
+            "id": 25,
+            "image": "Adventurer/Individual Sprites/adventurer-crnr-grb-00.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "hanging"
+                }
+            ],
+            "type": "PlayerCharacter"
+        },
+        {
+            "id": 26,
+            "image": "Adventurer/Individual Sprites/adventurer-crnr-grb-01.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "hanging"
+                }
+            ],
+            "type": "PlayerCharacter"
+        },
+        {
+            "id": 27,
+            "image": "Adventurer/Individual Sprites/adventurer-crnr-grb-02.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "hanging"
+                }
+            ],
+            "type": "PlayerCharacter"
+        },
+        {
+            "animation": [
+                {
+                    "duration": 150,
+                    "tileid": 25
+                },
+                {
+                    "duration": 150,
+                    "tileid": 26
+                },
+                {
+                    "duration": 150,
+                    "tileid": 27
+                },
+                {
+                    "duration": 150,
+                    "tileid": 28
+                }
+            ],
+            "id": 28,
+            "image": "Adventurer/Individual Sprites/adventurer-crnr-grb-03.png",
+            "imageheight": 37,
+            "imagewidth": 50,
+            "properties": [
+                {
+                    "name": "tile-group",
+                    "type": "string",
+                    "value": "hanging"
+                }
+            ],
+            "type": "PlayerCharacter"
+        }
+    ],
+    "tilewidth": 50,
+    "type": "tileset",
+    "version": "1.10"
+}
